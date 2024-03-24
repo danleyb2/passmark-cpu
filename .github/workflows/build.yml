@@ -17,10 +17,6 @@ jobs:
 
     # steps to perform in job
     steps:
-      - name: Get the version
-        id: vars
-        run: echo ::set-output name=tag::$(echo ${GITHUB_REF:10})
-
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -36,16 +32,10 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build image and push to Docker Hub and GitHub Container Registry
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v5
         with:
           # relative path to the place where source code with Dockerfile is located
           context: .
           # Note: tags has to be all lower-case
-          tags: |
-            danleyb2/passmark-cpu:latest
-            danleyb2/passmark-cpu:${{steps.vars.outputs.tag}}
-          # build on feature branches, push only on main branch
+          tags: danleyb2/passmark-cpu:latest
           push: true
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
