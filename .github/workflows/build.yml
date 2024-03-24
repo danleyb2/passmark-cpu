@@ -42,8 +42,8 @@ jobs:
           context: .
           # Note: tags has to be all lower-case
           tags: |
-            ${{ github.repository }}:latest
-            ${{ github.repository }}:${{steps.vars.outputs.tag}}
+            danleyb2/passmark-cpu:latest
+            danleyb2/passmark-cpu:${{steps.vars.outputs.tag}}
           # build on feature branches, push only on main branch
           push: true
 
