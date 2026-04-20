@@ -1,16 +1,22 @@
-FROM alpine:latest
+FROM ubuntu:focal
 LABEL maintainer="danleyb2.dev"
+ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apk add --no-cache \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        apt-transport-https \
         ca-certificates \
         curl \
         dmidecode \
-        ncurses-libs \
-        shadow \
+        libncurses5 \
+        openssh-server \
+        passwd \
         python3 \
         sudo \
         unzip \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
+    && apt-get clean
 
 RUN curl -OLsSf 'https://www.passmark.com/downloads/PerformanceTest_Linux_x86-64.zip' \
   -H 'Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
@@ -25,11 +31,10 @@ RUN curl -OLsSf 'https://www.passmark.com/downloads/PerformanceTest_Linux_x86-64
   -H 'sec-ch-ua: "Chromium";v="146", "Not-A.Brand";v="24", "Google Chrome";v="146"' \
   -H 'sec-ch-ua-mobile: ?0' \
   -H 'sec-ch-ua-platform: "Linux"' && unzip PerformanceTest_Linux_x86-64.zip && rm -f PerformanceTest_Linux_x86-64.zip \ 
-    && mv PerformanceTest/PerformanceTest_Linux_x86-64 PerformanceTest/pt_linux_x64 && chmod +x ./PerformanceTest/pt_linux_x64 
+    && mv PerformanceTest/PerformanceTest_Linux_x86-64 /pt_linux_x64 && chmod +x /pt_linux_x64
 
-COPY init.sh /usr/local/bin/
+COPY init.sh /init.sh
+RUN chmod u+x /init.sh
 
-RUN chmod u+x /usr/local/bin/init.sh
-WORKDIR /PerformanceTest
 
-ENTRYPOINT ["init.sh"]
+ENTRYPOINT ["/init.sh"]
