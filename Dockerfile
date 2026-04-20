@@ -18,7 +18,7 @@ RUN apt-get update \
     && rm -Rf /usr/share/doc && rm -Rf /usr/share/man \
     && apt-get clean
 
-RUN curl -O https://www.passmark.com/downloads/pt_linux_x64.zip \
+RUN curl -O https://www.passmark.com/downloads/PerformanceTest_Linux_x86-64.zip \
     && unzip pt_linux_x64.zip \    
     && rm -f pt_linux_x64.zip \
     && chmod +x ./PerformanceTest/pt_linux_x64 
